@@ -2,8 +2,16 @@ import json
 
 def handle(data):
     try:
-        # Первый этап: парсим внешний JSON
-        params = json.loads(data)
+        # Проверяем, является ли data строкой (JSON) или уже словарем
+        if isinstance(data, str):
+            try:
+                params = json.loads(data)  # Парсим JSON-строку
+            except json.JSONDecodeError:
+                return json.dumps({"error": "Invalid JSON format in input data"})
+        elif isinstance(data, dict):
+            params = data  # Данные уже являются словарем
+        else:
+            return json.dumps({"error": "Input data must be a JSON string or dictionary"})
 
         # Проверяем, что params является словарем
         if not isinstance(params, dict):
