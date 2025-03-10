@@ -12,18 +12,9 @@ def handle(data):
         # Извлекаем search_status
         search_status = params.get("search_status", "")
 
-        # Извлекаем data (которое может быть строкой)
-        data_str = params.get("data", "")
-
-        # Второй этап: парсим вложенный JSON внутри data
-        try:
-            data = json.loads(data_str)  # Преобразуем строку в объект
-        except json.JSONDecodeError:
-            return json.dumps({"error": "Invalid JSON format in 'data'"})
-
         # Извлекаем массивы dial_statuses и call_statuses
-        dial_statuses = data.get("dial_statuses", [])
-        call_statuses = data.get("call_statuses", [])
+        dial_statuses = params.get("dial_statuses", [])
+        call_statuses = params.get("call_statuses", [])
 
         # Проверяем, что dial_statuses и call_statuses являются списками
         if not isinstance(dial_statuses, list) or not isinstance(call_statuses, list):
