@@ -6,8 +6,8 @@ def handle(data):
         if isinstance(data, str):
             try:
                 params = json.loads(data)  # Парсим JSON-строку
-            except json.JSONDecodeError:
-                return json.dumps({"error": "Invalid JSON format in input data"})
+            except json.JSONDecodeError as e:
+                return json.dumps({"error": f"Invalid JSON format: {str(e)}"})
         elif isinstance(data, dict):
             params = data  # Данные уже являются словарем
         else:
@@ -28,9 +28,6 @@ def handle(data):
         # Проверяем, что dial_statuses и call_statuses являются списками
         if not isinstance(dial_statuses, list) or not isinstance(call_statuses, list):
             return json.dumps({"error": "'dial_statuses' and 'call_statuses' must be lists"})
-
-        print(f"Dial statuses: {dial_statuses}")  # Отладочный вывод
-        print(f"Call statuses: {call_statuses}")  # Отладочный вывод
 
         # Функция для поиска элемента в массиве
         def find_element(array, name):
@@ -55,7 +52,5 @@ def handle(data):
         return json.dumps({"error": "Element not found"})
 
     except Exception as e:
-        # В случае ошибки возвращаем сообщение об ошибке
-        return json.dumps({"error": str(e)})
         # В случае ошибки возвращаем сообщение об ошибке
         return json.dumps({"error": str(e)})
