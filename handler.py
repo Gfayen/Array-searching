@@ -19,6 +19,7 @@ def handle(data):
 
         # Извлекаем search_status
         search_status = params.get("search_status", "")
+        print(f"Search status: {search_status}")  # Отладочный вывод
 
         # Извлекаем массивы dial_statuses и call_statuses
         dial_statuses = params.get("dial_statuses", [])
@@ -28,9 +29,17 @@ def handle(data):
         if not isinstance(dial_statuses, list) or not isinstance(call_statuses, list):
             return json.dumps({"error": "'dial_statuses' and 'call_statuses' must be lists"})
 
+        print(f"Dial statuses: {dial_statuses}")  # Отладочный вывод
+        print(f"Call statuses: {call_statuses}")  # Отладочный вывод
+
         # Функция для поиска элемента в массиве
         def find_element(array, status):
-            return next((item for item in array if str(item.get("status")) == str(status)), None)
+            for item in array:
+                item_status = item.get("status")
+                print(f"Checking status: {item_status} against search_status: {status}")  # Отладочный вывод
+                if str(item_status) == str(status):
+                    return item
+            return None
 
         # Ищем элемент в dial_statuses
         result = find_element(dial_statuses, search_status)
