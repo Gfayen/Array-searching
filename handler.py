@@ -17,13 +17,13 @@ def handle(data):
         if not isinstance(params, dict):
             return json.dumps({"error": "Input data is not a dictionary"})
 
-        # Извлекаем search_status
-        search_status = params.get("search_status", "")
-        print(f"Search status: {search_status}")  # Отладочный вывод
+        # Извлекаем search_name
+        search_name = params.get("search_name", "")
+        print(f"Search name: {search_name}")  # Отладочный вывод
 
         # Извлекаем массивы dial_statuses и call_statuses
-        dial_statuses = params.get("dial_statuses", [])
-        call_statuses = params.get("call_statuses", [])
+        dial_statuses = params.get("data", {}).get("dial_statuses", [])
+        call_statuses = params.get("data", {}).get("call_statuses", [])
 
         # Проверяем, что dial_statuses и call_statuses являются списками
         if not isinstance(dial_statuses, list) or not isinstance(call_statuses, list):
@@ -33,21 +33,21 @@ def handle(data):
         print(f"Call statuses: {call_statuses}")  # Отладочный вывод
 
         # Функция для поиска элемента в массиве
-        def find_element(array, status):
+        def find_element(array, name):
             for item in array:
-                item_status = item.get("status")
-                print(f"Checking status: {item_status} against search_status: {status}")  # Отладочный вывод
-                if str(item_status) == str(status):
+                item_name = item.get("name")
+                print(f"Checking name: {item_name} against search_name: {name}")  # Отладочный вывод
+                if str(item_name) == str(name):  # Преобразуем в строки для сравнения
                     return item
             return None
 
         # Ищем элемент в dial_statuses
-        result = find_element(dial_statuses, search_status)
+        result = find_element(dial_statuses, search_name)
         if result:
             return json.dumps({"found": result})
 
         # Если не найдено в dial_statuses, ищем в call_statuses
-        result = find_element(call_statuses, search_status)
+        result = find_element(call_statuses, search_name)
         if result:
             return json.dumps({"found": result})
 
